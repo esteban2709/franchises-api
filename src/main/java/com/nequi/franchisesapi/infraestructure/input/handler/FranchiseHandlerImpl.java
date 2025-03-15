@@ -1,8 +1,7 @@
 package com.nequi.franchisesapi.infraestructure.input.handler;
 
 import com.nequi.franchisesapi.application.dto.request.FranchiseRequestDto;
-import com.nequi.franchisesapi.application.mapper.FranchiseRequestMapper;
-import com.nequi.franchisesapi.domain.api.IFranchiseServicePort;
+import com.nequi.franchisesapi.application.handler.interfaces.IFranchiseHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -13,13 +12,11 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class FranchiseHandlerImpl {
 
-    private final IFranchiseServicePort franchiseServicePort;
-    private final FranchiseRequestMapper franchiseRequestMapper;
+    private final IFranchiseHandler franchiseHandler;
 
     public Mono<ServerResponse> createFranchise(ServerRequest request) {
         return request.bodyToMono(FranchiseRequestDto.class)
-                .map(franchiseRequestMapper::toModel)
-                .flatMap(franchiseServicePort::saveFranchise)
+                .flatMap(franchiseHandler::saveFranchise)
                 .flatMap(franchise -> ServerResponse.ok().bodyValue(franchise))
 //                .onErrorResume(e -> ServerResponse.badRequest()
 //                        .bodyValue("Error creating franchise: " + e.getMessage()))

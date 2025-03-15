@@ -1,8 +1,8 @@
 package com.nequi.franchisesapi.infraestructure.input.routers;
 
-import com.nequi.franchisesapi.application.dto.request.FranchiseRequestDto;
-import com.nequi.franchisesapi.domain.model.Franchise;
-import com.nequi.franchisesapi.infraestructure.input.handler.FranchiseHandlerImpl;
+import com.nequi.franchisesapi.application.dto.request.BranchRequestDto;
+import com.nequi.franchisesapi.domain.model.Branch;
+import com.nequi.franchisesapi.infraestructure.input.handler.BranchHandlerImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,32 +17,31 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
-
 @Configuration
-public class FranchiseRouter {
+public class BranchRouter {
 
-    private static final String FRANCHISE_PATH = "franchise";
+    private static final String BRANCHES_PATH = "/branch";
 
     @Bean
     @RouterOperation(
-            path = "/" + FRANCHISE_PATH,
+            path = "/" + BRANCHES_PATH,
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST,
-            beanClass = FranchiseHandlerImpl.class,
-            beanMethod = "createFranchise",
+            beanClass = BranchHandlerImpl.class,
+            beanMethod = "createBranch",
             operation = @Operation(
-                    operationId = "createFranchise",
+                    operationId = "createBranch",
                     summary = "Crea una nueva franquicia",
                     description = "Endpoint para registrar una nueva franquicia en el sistema",
                     requestBody = @RequestBody(
                             required = true,
-                            content = @Content(schema = @Schema(implementation = FranchiseRequestDto.class))
+                            content = @Content(schema = @Schema(implementation = BranchRequestDto.class))
                     ),
                     responses = {
                             @ApiResponse(
                                     responseCode = "201",
                                     description = "Franquicia creada exitosamente",
-                                    content = @Content(schema = @Schema(implementation = Franchise.class))
+                                    content = @Content(schema = @Schema(implementation = Branch.class))
                             ),
                             @ApiResponse(
                                     responseCode = "400",
@@ -55,10 +54,11 @@ public class FranchiseRouter {
                     }
             )
     )
-    public RouterFunction<ServerResponse> franchiseRoutes(FranchiseHandlerImpl franchiseHandlerImpl) {
+    public RouterFunction<ServerResponse> branchRoutes(BranchHandlerImpl branchHandler) {
         return route()
-                .POST("/"+FRANCHISE_PATH, franchiseHandlerImpl::createFranchise)
-//                .DELETE("/"+FRANCHISE_PATH+"/{id}", franchiseHandler::deleteFranchise)
+                .POST(BRANCHES_PATH, branchHandler::createBranch)
+//                .GET(BRANCHES_PATH + "/{id}", branchHandler::getBranchById)
+//                .PUT(BRANCHES_PATH + "/{id}", branchHandler::updateBranch)
                 .build();
     }
 }
