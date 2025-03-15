@@ -1,6 +1,8 @@
 package com.nequi.franchisesapi.application.handler.impl;
 
+import com.nequi.franchisesapi.application.dto.request.FranchiseRequestDto;
 import com.nequi.franchisesapi.application.handler.interfaces.IFranchiseHandler;
+import com.nequi.franchisesapi.application.mapper.IFranchiseRequestMapper;
 import com.nequi.franchisesapi.domain.api.IFranchiseServicePort;
 import com.nequi.franchisesapi.domain.model.Franchise;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +14,11 @@ import reactor.core.publisher.Mono;
 public class FranchiseHandler implements IFranchiseHandler {
 
     private final IFranchiseServicePort franchiseServicePort;
+    private final IFranchiseRequestMapper franchiseRequestMapper;
 
     @Override
-    public Mono<Franchise> saveFranchise(Franchise franchise) {
-        return franchiseServicePort.saveFranchise(franchise);
+    public Mono<Franchise> saveFranchise(FranchiseRequestDto franchise) {
+        return franchiseServicePort.saveFranchise(franchiseRequestMapper.toModel(franchise));
     }
 
     @Override
