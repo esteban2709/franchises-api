@@ -2,16 +2,22 @@ package com.nequi.franchisesapi.infraestructure.configuration;
 
 import com.nequi.franchisesapi.domain.api.IBranchServicePort;
 import com.nequi.franchisesapi.domain.api.IFranchiseServicePort;
+import com.nequi.franchisesapi.domain.api.IProductServicePort;
 import com.nequi.franchisesapi.domain.spi.IBranchPersistencePort;
 import com.nequi.franchisesapi.domain.spi.IFranchisePersistencePort;
+import com.nequi.franchisesapi.domain.spi.IProductPersistencePort;
 import com.nequi.franchisesapi.domain.usecase.BranchUseCase;
 import com.nequi.franchisesapi.domain.usecase.FranchiseUseCase;
+import com.nequi.franchisesapi.domain.usecase.ProductUseCase;
 import com.nequi.franchisesapi.infraestructure.out.persistence.adapter.BranchPersistenceAdapter;
 import com.nequi.franchisesapi.infraestructure.out.persistence.adapter.FranchisePersistenceAdapter;
+import com.nequi.franchisesapi.infraestructure.out.persistence.adapter.ProductPersistenceAdapter;
 import com.nequi.franchisesapi.infraestructure.out.persistence.mapper.IBranchEntityMapper;
 import com.nequi.franchisesapi.infraestructure.out.persistence.mapper.IFranchiseEntityMapper;
+import com.nequi.franchisesapi.infraestructure.out.persistence.mapper.IProductEntityMapper;
 import com.nequi.franchisesapi.infraestructure.out.persistence.repository.IBranchRepository;
 import com.nequi.franchisesapi.infraestructure.out.persistence.repository.IFranchiseRepository;
+import com.nequi.franchisesapi.infraestructure.out.persistence.repository.IProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +31,9 @@ public class BeanConfiguration {
 
     private final IBranchRepository branchRepository;
     private final IBranchEntityMapper branchEntityMapper;
+
+    private final IProductRepository productRepository;
+    private final IProductEntityMapper productEntityMapper;
 
     @Bean
     public IFranchisePersistencePort franchisePersistencePort() {
@@ -44,5 +53,15 @@ public class BeanConfiguration {
     @Bean
     public IBranchServicePort branchServicePort() {
         return new BranchUseCase(branchPersistencePort());
+    }
+
+    @Bean
+    public IProductPersistencePort productPersistencePort() {
+        return new ProductPersistenceAdapter(productRepository, productEntityMapper);
+    }
+
+    @Bean
+    public IProductServicePort productServicePort() {
+        return new ProductUseCase(productPersistencePort());
     }
 }

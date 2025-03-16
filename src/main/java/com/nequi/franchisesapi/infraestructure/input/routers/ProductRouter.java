@@ -1,8 +1,8 @@
 package com.nequi.franchisesapi.infraestructure.input.routers;
 
-import com.nequi.franchisesapi.application.dto.request.FranchiseRequestDto;
-import com.nequi.franchisesapi.domain.model.Franchise;
-import com.nequi.franchisesapi.infraestructure.input.handler.FranchiseHandlerImpl;
+import com.nequi.franchisesapi.application.dto.request.ProductRequestDto;
+import com.nequi.franchisesapi.domain.model.Product;
+import com.nequi.franchisesapi.infraestructure.input.handler.ProductHandlerImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,34 +15,34 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
-
 @Configuration
-public class FranchiseRouter {
+public class ProductRouter {
 
-    private static final String FRANCHISE_PATH = "/franchise";
+    private static final String PRODUCTS_PATH = "/product";
 
     @Bean
     @RouterOperation(
-            path = FRANCHISE_PATH,
+            path = PRODUCTS_PATH,
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST,
-            beanClass = FranchiseHandlerImpl.class,
-            beanMethod = "createFranchise",
+            beanClass = ProductHandlerImpl.class,
+            beanMethod = "createProduct",
             operation = @Operation(
-                    operationId = "createFranchise",
+                    operationId = "createProduct",
                     summary = "Crea una nueva franquicia",
                     description = "Endpoint para registrar una nueva franquicia en el sistema",
                     requestBody = @RequestBody(
                             required = true,
-                            content = @Content(schema = @Schema(implementation = FranchiseRequestDto.class))
+                            content = @Content(schema = @Schema(implementation = ProductRequestDto.class))
                     ),
                     responses = {
                             @ApiResponse(
                                     responseCode = "201",
                                     description = "Franquicia creada exitosamente",
-                                    content = @Content(schema = @Schema(implementation = Franchise.class))
+                                    content = @Content(schema = @Schema(implementation = Product.class))
                             ),
                             @ApiResponse(
                                     responseCode = "400",
@@ -55,10 +55,12 @@ public class FranchiseRouter {
                     }
             )
     )
-    public RouterFunction<ServerResponse> franchiseRoutes(FranchiseHandlerImpl franchiseHandlerImpl) {
+    public RouterFunction<ServerResponse> productRoutes(ProductHandlerImpl productHandler) {
         return route()
-                .POST(FRANCHISE_PATH, franchiseHandlerImpl::createFranchise)
-//                .DELETE(FRANCHISE_PATH+"/{id}", franchiseHandler::deleteFranchise)
+                .POST(PRODUCTS_PATH, productHandler::createProduct)
+//                .GET(PRODUCTS_PATH + "/{id}", productHandler::getProductById)
+//                .PUT(PRODUCTS_PATH + "/{id}", productHandler::updateProduct)
+//                .DELETE(PRODUCTS_PATH + "/{id}", productHandler::deleteProduct)
                 .build();
     }
 }

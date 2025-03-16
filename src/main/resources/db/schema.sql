@@ -10,4 +10,11 @@ CREATE TABLE IF NOT EXISTS branches (
     FOREIGN KEY (franchise_id) REFERENCES franchises(id)
 );
 
+CREATE TABLE IF NOT EXISTS products (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    stock INT NOT NULL,
+    branch_id BIGINT NOT NULL,
+    FOREIGN KEY (branch_id) REFERENCES branches(id)
+);
 

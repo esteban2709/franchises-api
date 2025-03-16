@@ -12,24 +12,24 @@ import reactor.core.publisher.Mono;
 public class FranchisePersistenceAdapter implements IFranchisePersistencePort {
 
     private final IFranchiseRepository franchiseRepository;
-    private final IFranchiseEntityMapper IFranchiseEntityMapper;
+    private final IFranchiseEntityMapper franchiseEntityMapper;
 
     @Override
     public Mono<Franchise> saveFranchise(Franchise franchise) {
-        return franchiseRepository.save(IFranchiseEntityMapper.toEntity(franchise))
-                .map(IFranchiseEntityMapper::toModel);
+        return franchiseRepository.save(franchiseEntityMapper.toEntity(franchise))
+                .map(franchiseEntityMapper::toModel);
     }
 
     @Override
     public Mono<Franchise> findFranchiseById(Long id) {
         return franchiseRepository.findById(id)
-                .map(IFranchiseEntityMapper::toModel)
+                .map(franchiseEntityMapper::toModel)
                 .switchIfEmpty(Mono.error(new NoDataFoundException()));
     }
 
     @Override
     public Mono<Franchise> updateFranchiseName(Long id, String name) {
-        return franchiseRepository.updateName(id, name).map(IFranchiseEntityMapper::toModel)
+        return franchiseRepository.updateName(id, name).map(franchiseEntityMapper::toModel)
                 .switchIfEmpty(Mono.error(new NoDataFoundException()));
     }
 }
