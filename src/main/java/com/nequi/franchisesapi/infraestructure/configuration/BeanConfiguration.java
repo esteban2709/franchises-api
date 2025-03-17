@@ -13,8 +13,10 @@ import com.nequi.franchisesapi.infraestructure.out.persistence.adapter.BranchPer
 import com.nequi.franchisesapi.infraestructure.out.persistence.adapter.FranchisePersistenceAdapter;
 import com.nequi.franchisesapi.infraestructure.out.persistence.adapter.ProductPersistenceAdapter;
 import com.nequi.franchisesapi.infraestructure.out.persistence.mapper.IBranchEntityMapper;
+import com.nequi.franchisesapi.infraestructure.out.persistence.mapper.IBranchProductEntityMapper;
 import com.nequi.franchisesapi.infraestructure.out.persistence.mapper.IFranchiseEntityMapper;
 import com.nequi.franchisesapi.infraestructure.out.persistence.mapper.IProductEntityMapper;
+import com.nequi.franchisesapi.infraestructure.out.persistence.repository.IBranchProductRepository;
 import com.nequi.franchisesapi.infraestructure.out.persistence.repository.IBranchRepository;
 import com.nequi.franchisesapi.infraestructure.out.persistence.repository.IFranchiseRepository;
 import com.nequi.franchisesapi.infraestructure.out.persistence.repository.IProductRepository;
@@ -34,6 +36,9 @@ public class BeanConfiguration {
 
     private final IProductRepository productRepository;
     private final IProductEntityMapper productEntityMapper;
+
+    private final IBranchProductRepository branchProductRepository;
+    private final IBranchProductEntityMapper branchProductEntityMapper;
 
     @Bean
     public IFranchisePersistencePort franchisePersistencePort() {
@@ -57,7 +62,7 @@ public class BeanConfiguration {
 
     @Bean
     public IProductPersistencePort productPersistencePort() {
-        return new ProductPersistenceAdapter(productRepository, productEntityMapper);
+        return new ProductPersistenceAdapter(productRepository, productEntityMapper,  branchProductEntityMapper, branchProductRepository);
     }
 
     @Bean

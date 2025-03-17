@@ -58,6 +58,8 @@ public class ProductRouter {
     public RouterFunction<ServerResponse> productRoutes(ProductHandlerImpl productHandler) {
         return route()
                 .POST(PRODUCTS_PATH, productHandler::createProduct)
+                .PATCH(PRODUCTS_PATH + "/update-stock", productHandler::updateProductStock)
+                .GET(PRODUCTS_PATH + "/top-stock/{id}", productHandler::getTopStockProductsByBranchByFranchiseId)
 //                .GET(PRODUCTS_PATH + "/{id}", productHandler::getProductById)
 //                .PUT(PRODUCTS_PATH + "/{id}", productHandler::updateProduct)
 //                .DELETE(PRODUCTS_PATH + "/{id}", productHandler::deleteProduct)

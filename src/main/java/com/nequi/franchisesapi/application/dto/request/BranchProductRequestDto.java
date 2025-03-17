@@ -3,10 +3,9 @@ package com.nequi.franchisesapi.application.dto.request;
 import lombok.Data;
 
 @Data
-public class ProductRequestDto {
+public class BranchProductRequestDto {
 
-    private String name;
+    private Long productId;
     private Long branchId;
-    private Long franchiseId;
     private Integer stock;
 }
