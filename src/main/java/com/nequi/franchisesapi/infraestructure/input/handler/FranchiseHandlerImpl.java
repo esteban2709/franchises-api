@@ -22,4 +22,11 @@ public class FranchiseHandlerImpl {
 //                        .bodyValue("Error creating franchise: " + e.getMessage()))
                 ;
     }
+
+    public Mono<ServerResponse> updateFranchiseName(ServerRequest request) {
+        Long id = Long.parseLong(request.pathVariable("id"));
+        return request.bodyToMono(FranchiseRequestDto.class)
+                .flatMap(franchiseRequestDto -> franchiseHandler.updateFranchiseName(id, franchiseRequestDto.getName()))
+                .flatMap(franchise -> ServerResponse.ok().bodyValue(franchise));
+    }
 }

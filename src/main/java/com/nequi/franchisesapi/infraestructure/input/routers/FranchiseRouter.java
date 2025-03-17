@@ -58,6 +58,7 @@ public class FranchiseRouter {
     public RouterFunction<ServerResponse> franchiseRoutes(FranchiseHandlerImpl franchiseHandlerImpl) {
         return route()
                 .POST(FRANCHISE_PATH, franchiseHandlerImpl::createFranchise)
+                .PATCH(FRANCHISE_PATH + "/{id}", franchiseHandlerImpl::updateFranchiseName)
 //                .DELETE(FRANCHISE_PATH+"/{id}", franchiseHandler::deleteFranchise)
                 .build();
     }
