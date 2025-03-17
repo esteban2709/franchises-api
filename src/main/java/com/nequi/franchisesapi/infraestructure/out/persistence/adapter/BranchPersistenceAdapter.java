@@ -30,6 +30,7 @@ public class BranchPersistenceAdapter implements IBranchPersistencePort {
     @Override
     public Mono<Branch> updateBranchName(Long id, String name) {
         return branchRepository.updateName(id, name)
+                .then(branchRepository.findById(id))
                 .map(branchEntityMapper::toModel)
                 .switchIfEmpty(Mono.error(new NoDataFoundException()));
     }

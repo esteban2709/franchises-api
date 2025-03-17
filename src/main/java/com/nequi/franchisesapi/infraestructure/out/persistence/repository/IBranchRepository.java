@@ -10,8 +10,8 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface IBranchRepository extends ReactiveCrudRepository<BranchEntity, Long> {
 
-    @Query("UPDATE BranchEntity SET name = :name WHERE id = :id")
-    Mono<BranchEntity> updateName(Long id, String name);
+    @Query("UPDATE branches SET name = :name WHERE id = :id")
+    Mono<Integer> updateName(Long id, String name);
 
     Flux<BranchEntity> findByFranchiseId(Long franchiseId);
 

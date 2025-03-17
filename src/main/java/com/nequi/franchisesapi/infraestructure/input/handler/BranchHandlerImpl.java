@@ -21,4 +21,13 @@ public class BranchHandlerImpl {
                 .onErrorResume(e -> ServerResponse.badRequest()
                         .bodyValue("Error creating branch: " + e.getMessage()));
     }
+
+    public Mono<ServerResponse> updateBranchName(ServerRequest serverRequest) {
+        Long id = Long.valueOf(serverRequest.pathVariable("id"));
+        String name = serverRequest.queryParam("name").orElseThrow(
+                () -> new IllegalArgumentException("Name is required")
+        );
+        return branchHandler.updateBranchName(id, name)
+                .flatMap(branch -> ServerResponse.ok().bodyValue(branch));
+    }
 }

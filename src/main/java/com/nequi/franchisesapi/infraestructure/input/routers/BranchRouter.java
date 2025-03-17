@@ -57,6 +57,7 @@ public class BranchRouter {
     public RouterFunction<ServerResponse> branchRoutes(BranchHandlerImpl branchHandler) {
         return route()
                 .POST(BRANCHES_PATH, branchHandler::createBranch)
+                .PATCH(BRANCHES_PATH + "/{id}", branchHandler::updateBranchName)
 //                .GET(BRANCHES_PATH + "/{id}", branchHandler::getBranchById)
 //                .PUT(BRANCHES_PATH + "/{id}", branchHandler::updateBranch)
                 .build();
