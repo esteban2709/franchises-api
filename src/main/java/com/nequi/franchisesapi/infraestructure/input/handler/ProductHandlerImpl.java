@@ -44,4 +44,13 @@ public class ProductHandlerImpl {
                 .collectList()
                 .flatMap(products -> ServerResponse.ok().bodyValue(products));
     }
+
+    public Mono<ServerResponse> updateProductName(ServerRequest request) {
+        Long productId = Long.valueOf(request.pathVariable("id"));
+        String name = request.queryParam("name").orElseThrow(
+                () -> new IllegalArgumentException("Name is required")
+        );
+        return productHandler.updateProductName(productId, name)
+                .flatMap(product -> ServerResponse.ok().bodyValue(product));
+    }
 }
