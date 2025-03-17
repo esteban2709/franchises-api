@@ -4,6 +4,7 @@ import com.nequi.franchisesapi.domain.model.BranchProduct;
 import com.nequi.franchisesapi.domain.model.Product;
 import com.nequi.franchisesapi.domain.spi.IProductPersistencePort;
 import com.nequi.franchisesapi.domain.utils.ProductStockByBranch;
+import com.nequi.franchisesapi.infraestructure.exception.NoDataFoundException;
 import com.nequi.franchisesapi.infraestructure.out.persistence.entity.BranchProductEntity;
 import com.nequi.franchisesapi.infraestructure.out.persistence.entity.ProductEntity;
 import com.nequi.franchisesapi.infraestructure.out.persistence.mapper.IBranchProductEntityMapper;
@@ -40,7 +41,9 @@ public class ProductPersistenceAdapter implements IProductPersistencePort {
     @Override
     public Mono<Product> updateProductName(Long id, String name) {
         return productRepository.updateName(id, name)
-                .map(productEntityMapper::toModel);
+                .then(productRepository.findById(id))
+                .map(productEntityMapper::toModel)
+                .switchIfEmpty(Mono.error(new NoDataFoundException()));
     }
 
     @Override

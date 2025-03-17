@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 public interface IProductRepository extends ReactiveCrudRepository<ProductEntity, Long> {
 
     @Query("UPDATE products SET name = :name WHERE id = :id")
-    Mono<ProductEntity> updateName(Long id, String name);
+    Mono<Integer> updateName(Long id, String name);
 
     @Query("SELECT b.id AS branch_id, b.name AS branch_name, p.id AS product_id, p.name AS product_name, bp.stock " +
             "FROM branches b " +
