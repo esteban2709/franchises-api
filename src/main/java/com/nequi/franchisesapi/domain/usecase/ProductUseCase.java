@@ -5,7 +5,7 @@ import com.nequi.franchisesapi.domain.model.BranchProduct;
 import com.nequi.franchisesapi.domain.model.Product;
 import com.nequi.franchisesapi.domain.spi.IProductPersistencePort;
 import com.nequi.franchisesapi.domain.utils.ProductStockByBranch;
-import com.nequi.franchisesapi.domain.utils.validations.Validation;
+import com.nequi.franchisesapi.domain.utils.validations.Validations;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -16,13 +16,13 @@ import reactor.core.publisher.Mono;
 public class ProductUseCase implements IProductServicePort {
 
     private final IProductPersistencePort productPersistencePort;
-    private final Validation validation;
+    private final Validations validations;
 
 
     @Override
     public Mono<Product> saveProduct(Product product) {
-        return validation.existBranch(product.getBranchId())
-                .then(Mono.defer(() -> validation.existProductByName(product.getName())
+        return validations.existBranch(product.getBranchId())
+                .then(Mono.defer(() -> validations.existProductByName(product.getName())
                         .flatMap(existingProduct -> createBranchProductRelation(existingProduct, product))
                         .switchIfEmpty(
                                 productPersistencePort.saveProduct(product)
@@ -50,7 +50,7 @@ public class ProductUseCase implements IProductServicePort {
 
     @Override
     public Mono<Product> updateProductName(Long id, String name) {
-        return validation.existProduct(id)
+        return validations.existProduct(id)
                 .then(Mono.defer(() -> productPersistencePort.updateProductName(id, name)));
     }
 
@@ -62,8 +62,8 @@ public class ProductUseCase implements IProductServicePort {
     @Override
     public Mono<Void> updateProductStock(Long productId, Long branchId, Integer stock) {
         return Mono.when(
-                validation.existProduct(productId),
-                validation.existBranch(branchId)
+                validations.existProduct(productId),
+                validations.existBranch(branchId)
         ).then(Mono.defer(() -> productPersistencePort.updateProductStock(productId, branchId, stock)));
     }
 

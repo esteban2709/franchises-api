@@ -19,8 +19,6 @@ public class ProductHandlerImpl {
         return request.bodyToMono(ProductRequestDto.class)
                 .flatMap(productHandler::saveProduct)
                 .flatMap(product -> ServerResponse.ok().bodyValue(product))
-//                .onErrorResume(e -> ServerResponse.badRequest()
-//                        .bodyValue("Error creating product: " + e.getMessage()))
                 ;
     }
 
