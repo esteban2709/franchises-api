@@ -13,4 +13,5 @@ public interface IProductHandler {
     Mono<Product> updateProductName(Long id, String name);
     Mono<Void> updateProductStock(Long productId, Long branchId, Integer stock);
     Flux<ProductStockByBranch> getTopStockProductsByBranchByFranchiseId(Long id);
+    Mono<Void> deleteProduct(Long productId);
 }

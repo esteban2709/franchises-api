@@ -18,15 +18,15 @@ public class FranchiseHandlerImpl {
         return request.bodyToMono(FranchiseRequestDto.class)
                 .flatMap(franchiseHandler::saveFranchise)
                 .flatMap(franchise -> ServerResponse.ok().bodyValue(franchise))
-//                .onErrorResume(e -> ServerResponse.badRequest()
-//                        .bodyValue("Error creating franchise: " + e.getMessage()))
                 ;
     }
 
     public Mono<ServerResponse> updateFranchiseName(ServerRequest request) {
         Long id = Long.parseLong(request.pathVariable("id"));
-        return request.bodyToMono(FranchiseRequestDto.class)
-                .flatMap(franchiseRequestDto -> franchiseHandler.updateFranchiseName(id, franchiseRequestDto.getName()))
+        String name = request.queryParam("name").orElseThrow(
+                () -> new IllegalArgumentException("Name is required")
+        );
+        return franchiseHandler.updateFranchiseName(id, name)
                 .flatMap(franchise -> ServerResponse.ok().bodyValue(franchise));
     }
 }

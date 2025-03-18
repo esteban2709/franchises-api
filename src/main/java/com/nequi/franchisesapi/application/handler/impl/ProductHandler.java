@@ -49,4 +49,9 @@ public class ProductHandler implements IProductHandler {
         return productServicePort.getTopStockProductsByBranchByFranchiseId(id);
     }
 
+    @Override
+    public Mono<Void> deleteProduct(Long productId) {
+        return productServicePort.deleteProduct(productId);
+    }
+
 }

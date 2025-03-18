@@ -48,7 +48,8 @@ public class ProductPersistenceAdapter implements IProductPersistencePort {
 
     @Override
     public Mono<Void> deleteProduct(Long id) {
-        return productRepository.deleteById(id);
+        return branchProductRepository.deleteByProductId(id)
+                .then(productRepository.deleteById(id));
     }
 
     @Override

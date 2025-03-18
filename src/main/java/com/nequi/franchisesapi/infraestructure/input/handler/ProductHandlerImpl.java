@@ -53,4 +53,10 @@ public class ProductHandlerImpl {
         return productHandler.updateProductName(productId, name)
                 .flatMap(product -> ServerResponse.ok().bodyValue(product));
     }
+
+    public Mono<ServerResponse> deleteProduct(ServerRequest request) {
+        Long productId = Long.valueOf(request.pathVariable("id"));
+        return productHandler.deleteProduct(productId)
+                .then(ServerResponse.ok().build());
+    }
 }
