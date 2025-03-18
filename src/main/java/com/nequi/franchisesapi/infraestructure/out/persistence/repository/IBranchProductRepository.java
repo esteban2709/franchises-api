@@ -11,4 +11,7 @@ public interface IBranchProductRepository extends ReactiveCrudRepository<BranchP
 
     @Query("UPDATE branch_products SET stock = :stock WHERE product_id = :productId and branch_id = :branchId")
     Mono<Void> updateProductStock(Long productId, Long branchId, Integer stock);
+
+    @Query("DELETE FROM branch_products WHERE product_id = :productId")
+    Mono<Void> deleteByProductId(Long productId);
 }
