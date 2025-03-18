@@ -6,6 +6,8 @@ import com.nequi.franchisesapi.domain.utils.ProductStockByBranch;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 public interface IProductPersistencePort {
     Mono<Product> saveProduct(Product product);
     Mono<Product> findProductById(Long id);
@@ -14,5 +16,5 @@ public interface IProductPersistencePort {
     Mono<Void> updateProductStock(Long productId, Long branchId, Integer stock);
     Mono<BranchProduct> saveBranchProduct(BranchProduct branchProduct);
     Flux<ProductStockByBranch> getTopStockProductsByBranchByFranchiseId(Long id);
-
+    Mono<Product> findProductByName(String name);
 }

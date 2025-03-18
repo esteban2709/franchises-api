@@ -9,6 +9,7 @@ import com.nequi.franchisesapi.domain.spi.IProductPersistencePort;
 import com.nequi.franchisesapi.domain.usecase.BranchUseCase;
 import com.nequi.franchisesapi.domain.usecase.FranchiseUseCase;
 import com.nequi.franchisesapi.domain.usecase.ProductUseCase;
+import com.nequi.franchisesapi.domain.utils.validations.Validation;
 import com.nequi.franchisesapi.infraestructure.out.persistence.adapter.BranchPersistenceAdapter;
 import com.nequi.franchisesapi.infraestructure.out.persistence.adapter.FranchisePersistenceAdapter;
 import com.nequi.franchisesapi.infraestructure.out.persistence.adapter.ProductPersistenceAdapter;
@@ -66,7 +67,12 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public Validation validator() {
+        return new Validation(productPersistencePort(), branchPersistencePort(), franchisePersistencePort());
+    }
+
+    @Bean
     public IProductServicePort productServicePort() {
-        return new ProductUseCase(productPersistencePort());
+        return new ProductUseCase(productPersistencePort(), validator());
     }
 }

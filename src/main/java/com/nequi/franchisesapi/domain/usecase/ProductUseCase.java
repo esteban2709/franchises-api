@@ -5,6 +5,7 @@ import com.nequi.franchisesapi.domain.model.BranchProduct;
 import com.nequi.franchisesapi.domain.model.Product;
 import com.nequi.franchisesapi.domain.spi.IProductPersistencePort;
 import com.nequi.franchisesapi.domain.utils.ProductStockByBranch;
+import com.nequi.franchisesapi.domain.utils.validations.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -15,11 +16,31 @@ import reactor.core.publisher.Mono;
 public class ProductUseCase implements IProductServicePort {
 
     private final IProductPersistencePort productPersistencePort;
+    private final Validation validation;
 
 
     @Override
     public Mono<Product> saveProduct(Product product) {
-        return productPersistencePort.saveProduct(product);
+        return validation.existBranch(product.getBranchId())
+                .then(Mono.defer(() -> validation.existProductByName(product.getName())
+                        .flatMap(existingProduct -> createBranchProductRelation(existingProduct, product))
+                        .switchIfEmpty(
+                                productPersistencePort.saveProduct(product)
+                                        .flatMap(savedProduct -> createBranchProductRelation(savedProduct, product))
+                        )));
+    }
+
+    private Mono<Product> createBranchProductRelation(Product savedProduct, Product originalProduct) {
+        BranchProduct branchProduct = new BranchProduct();
+        branchProduct.setBranchId(originalProduct.getBranchId());
+        branchProduct.setProductId(savedProduct.getId());
+        branchProduct.setStock(originalProduct.getStock());
+
+        savedProduct.setStock(originalProduct.getStock());
+        savedProduct.setBranchId(originalProduct.getBranchId());
+
+        return saveBranchProduct(branchProduct)
+                .thenReturn(savedProduct);
     }
 
     @Override
@@ -29,7 +50,8 @@ public class ProductUseCase implements IProductServicePort {
 
     @Override
     public Mono<Product> updateProductName(Long id, String name) {
-        return productPersistencePort.updateProductName(id, name);
+        return validation.existProduct(id)
+                .then(Mono.defer(() -> productPersistencePort.updateProductName(id, name)));
     }
 
     @Override
@@ -39,7 +61,10 @@ public class ProductUseCase implements IProductServicePort {
 
     @Override
     public Mono<Void> updateProductStock(Long productId, Long branchId, Integer stock) {
-        return productPersistencePort.updateProductStock(productId, branchId, stock);
+        return Mono.when(
+                validation.existProduct(productId),
+                validation.existBranch(branchId)
+        ).then(Mono.defer(() -> productPersistencePort.updateProductStock(productId, branchId, stock)));
     }
 
     @Override

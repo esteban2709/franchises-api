@@ -14,8 +14,6 @@ public interface IProductEntityMapper {
 
      ProductEntity toEntity(Product product);
 
-     @Mapping(target = "branchId", source = "branchId")
-     @Mapping(target = "stock", source = "stock")
      @Mapping(target = "id", source = "id")
      @Mapping(target = "name", source = "name")
      Product toModel(ProductEntity productEntity);

@@ -26,17 +26,7 @@ public class ProductHandler implements IProductHandler {
     @Override
     public Mono<Product> saveProduct(ProductRequestDto product) {
         return productServicePort.saveProduct(productRequestMapper.toModel(product))
-                .flatMap(savedProduct -> {
-                    BranchProduct branchProduct = new BranchProduct();
-                    branchProduct.setBranchId(product.getBranchId());
-                    branchProduct.setProductId(savedProduct.getId());
-                    branchProduct.setStock(product.getStock());
-
-                    savedProduct.setStock(product.getStock());
-                    savedProduct.setBranchId(product.getBranchId());
-                    return productServicePort.saveBranchProduct(branchProduct)
-                            .thenReturn(savedProduct);
-                });
+               ;
     }
 
     @Override

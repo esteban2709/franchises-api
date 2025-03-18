@@ -66,4 +66,11 @@ public class ProductPersistenceAdapter implements IProductPersistencePort {
     public Flux<ProductStockByBranch> getTopStockProductsByBranchByFranchiseId(Long id) {
         return productRepository.topStockProductsByBranchByFranchiseId(id);
     }
+
+    @Override
+    public Mono<Product> findProductByName(String name) {
+        return productRepository.findProductEntityByName(name)
+                .map(productEntityMapper::toModel)
+                .switchIfEmpty(Mono.empty());
+    }
 }
