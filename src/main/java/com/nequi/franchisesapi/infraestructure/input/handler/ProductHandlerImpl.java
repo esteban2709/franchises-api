@@ -3,6 +3,7 @@ package com.nequi.franchisesapi.infraestructure.input.handler;
 import com.nequi.franchisesapi.application.dto.request.BranchProductRequestDto;
 import com.nequi.franchisesapi.application.dto.request.ProductRequestDto;
 import com.nequi.franchisesapi.application.handler.interfaces.IProductHandler;
+import com.nequi.franchisesapi.infraestructure.exeptionhandler.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -24,13 +25,13 @@ public class ProductHandlerImpl {
 
     public Mono<ServerResponse> updateProductStock(ServerRequest request) {
         Long productId = Long.valueOf(request.queryParam("productId").orElseThrow(
-                () -> new IllegalArgumentException("Branch ID is required")
+                () -> new IllegalArgumentException(ExceptionResponse.PRODUCT_ID_REQUIRED.getMessage())
         ));
         Long branchId = Long.valueOf(request.queryParam("branchId").orElseThrow(
-                () -> new IllegalArgumentException("Branch ID is required")
+                () -> new IllegalArgumentException(ExceptionResponse.BRANCH_ID_REQUIRED.getMessage())
         ));
         Integer stock = Integer.valueOf(request.queryParam("stock").orElseThrow(
-                () -> new IllegalArgumentException("Stock is required")
+                () -> new IllegalArgumentException(ExceptionResponse.STOCK_REQUIRED.getMessage())
         ));
         return productHandler.updateProductStock(productId, branchId, stock)
                 .then(ServerResponse.ok().build());
@@ -46,7 +47,7 @@ public class ProductHandlerImpl {
     public Mono<ServerResponse> updateProductName(ServerRequest request) {
         Long productId = Long.valueOf(request.pathVariable("id"));
         String name = request.queryParam("name").orElseThrow(
-                () -> new IllegalArgumentException("Name is required")
+                () -> new IllegalArgumentException(ExceptionResponse.NAME_REQUIRED.getMessage())
         );
         return productHandler.updateProductName(productId, name)
                 .flatMap(product -> ServerResponse.ok().bodyValue(product));
