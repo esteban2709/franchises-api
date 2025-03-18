@@ -66,8 +66,29 @@ mvn clean compile
 mvn spring-boot:run
 ```
 
-
 ---
+
+### 6. Ejecutar con Docker
+
+Si prefieres ejecutar la aplicación dentro de un contenedor **Docker**, sigue estos pasos:
+
+1. **Instalar Docker** *(Si no lo tienes instalado)*  
+   Descarga e instala Docker desde:  
+   [Docker Download](https://www.docker.com/get-started/)
+
+2. **Construir la imagen de Docker**
+
+   ```sh
+   docker build -t franchises-api .
+   ```
+
+3. **Ejecutar el contenedor mapeando el puerto 8080:**
+
+   ```sh
+   docker run -p 8080:8080 franchises-api
+   ```
+
+Esto iniciará la aplicación dentro de un contenedor y estará accesible en `http://localhost:8080`.
 
 ## 🎯 ¡Listo! Ahora puedes empezar a usar **Franchises API** 🚀
 
