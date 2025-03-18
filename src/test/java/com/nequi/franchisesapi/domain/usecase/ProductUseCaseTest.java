@@ -4,7 +4,7 @@ import com.nequi.franchisesapi.domain.model.BranchProduct;
 import com.nequi.franchisesapi.domain.model.Product;
 import com.nequi.franchisesapi.domain.spi.IProductPersistencePort;
 import com.nequi.franchisesapi.domain.utils.ProductStockByBranch;
-import com.nequi.franchisesapi.domain.utils.validations.Validation;
+import com.nequi.franchisesapi.domain.utils.validations.Validations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,7 @@ class ProductUseCaseTest {
     private IProductPersistencePort productPersistencePort;
 
     @Mock
-    private Validation validation;
+    private Validations validations;
 
     @InjectMocks
     private ProductUseCase productUseCase;
@@ -60,13 +60,11 @@ class ProductUseCaseTest {
 
     @Test
     void saveProduct_whenProductDoesNotExist_shouldSaveProductAndCreateRelation() {
-        // Arrange
-        when(validation.existBranch(anyLong())).thenReturn(Mono.just(true));
-        when(validation.existProductByName(anyString())).thenReturn(Mono.empty());
+        when(validations.existBranch(anyLong())).thenReturn(Mono.just(true));
+        when(validations.existProductByName(anyString())).thenReturn(Mono.empty());
         when(productPersistencePort.saveProduct(any(Product.class))).thenReturn(Mono.just(product));
         when(productPersistencePort.saveBranchProduct(any(BranchProduct.class))).thenReturn(Mono.just(branchProduct));
 
-        // Act & Assert
         StepVerifier.create(productUseCase.saveProduct(product))
                 .expectNextMatches(savedProduct -> {
                     assertEquals(1L, savedProduct.getId());
@@ -77,18 +75,16 @@ class ProductUseCaseTest {
                 })
                 .verifyComplete();
 
-        verify(validation).existBranch(2L);
-        verify(validation).existProductByName("Producto Test");
+        verify(validations).existBranch(2L);
+        verify(validations).existProductByName("Producto Test");
         verify(productPersistencePort).saveProduct(any(Product.class));
         verify(productPersistencePort).saveBranchProduct(any(BranchProduct.class));
     }
 
     @Test
     void findProductById_shouldReturnProduct() {
-        // Arrange
         when(productPersistencePort.findProductById(anyLong())).thenReturn(Mono.just(product));
 
-        // Act & Assert
         StepVerifier.create(productUseCase.findProductById(1L))
                 .expectNextMatches(foundProduct -> {
                     assertEquals(1L, foundProduct.getId());
@@ -104,11 +100,9 @@ class ProductUseCaseTest {
 
     @Test
     void updateProductName_shouldUpdateAndReturnProduct() {
-        // Arrange
-        when(validation.existProduct(anyLong())).thenReturn(Mono.just(true));
+        when(validations.existProduct(anyLong())).thenReturn(Mono.just(true));
         when(productPersistencePort.updateProductName(anyLong(), anyString())).thenReturn(Mono.just(product));
 
-        // Act & Assert
         StepVerifier.create(productUseCase.updateProductName(1L, "Producto Actualizado"))
                 .expectNextMatches(updatedProduct -> {
                     assertEquals(1L, updatedProduct.getId());
@@ -119,16 +113,14 @@ class ProductUseCaseTest {
                 })
                 .verifyComplete();
 
-        verify(validation).existProduct(1L);
+        verify(validations).existProduct(1L);
         verify(productPersistencePort).updateProductName(1L, "Producto Actualizado");
     }
 
     @Test
     void deleteProduct_shouldDeleteProduct() {
-        // Arrange
         when(productPersistencePort.deleteProduct(anyLong())).thenReturn(Mono.empty());
 
-        // Act & Assert
         StepVerifier.create(productUseCase.deleteProduct(1L))
                 .verifyComplete();
 
@@ -137,26 +129,22 @@ class ProductUseCaseTest {
 
     @Test
     void updateProductStock_shouldUpdateStock() {
-        // Arrange
-        when(validation.existProduct(anyLong())).thenReturn(Mono.just(true));
-        when(validation.existBranch(anyLong())).thenReturn(Mono.just(true));
+        when(validations.existProduct(anyLong())).thenReturn(Mono.just(true));
+        when(validations.existBranch(anyLong())).thenReturn(Mono.just(true));
         when(productPersistencePort.updateProductStock(anyLong(), anyLong(), anyInt())).thenReturn(Mono.empty());
 
-        // Act & Assert
         StepVerifier.create(productUseCase.updateProductStock(1L, 2L, 20))
                 .verifyComplete();
 
-        verify(validation).existProduct(1L);
-        verify(validation).existBranch(2L);
+        verify(validations).existProduct(1L);
+        verify(validations).existBranch(2L);
         verify(productPersistencePort).updateProductStock(1L, 2L, 20);
     }
 
     @Test
     void saveBranchProduct_shouldSaveAndReturnBranchProduct() {
-        // Arrange
         when(productPersistencePort.saveBranchProduct(any(BranchProduct.class))).thenReturn(Mono.just(branchProduct));
 
-        // Act & Assert
         StepVerifier.create(productUseCase.saveBranchProduct(branchProduct))
                 .expectNextMatches(savedBranchProduct -> {
                     assertEquals(1L, savedBranchProduct.getId());
@@ -172,11 +160,9 @@ class ProductUseCaseTest {
 
     @Test
     void getTopStockProductsByBranchByFranchiseId_shouldReturnProductsList() {
-        // Arrange
         when(productPersistencePort.getTopStockProductsByBranchByFranchiseId(anyLong()))
                 .thenReturn(Flux.just(productStockByBranch));
 
-        // Act & Assert
         StepVerifier.create(productUseCase.getTopStockProductsByBranchByFranchiseId(1L))
                 .expectNextMatches(stockByBranch -> {
                     assertEquals(1L, stockByBranch.getProductId());

@@ -2,6 +2,7 @@ package com.nequi.franchisesapi.infraestructure.input.handler;
 
 import com.nequi.franchisesapi.application.dto.request.FranchiseRequestDto;
 import com.nequi.franchisesapi.application.handler.interfaces.IFranchiseHandler;
+import com.nequi.franchisesapi.infraestructure.exeptionhandler.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -24,7 +25,7 @@ public class FranchiseHandlerImpl {
     public Mono<ServerResponse> updateFranchiseName(ServerRequest request) {
         Long id = Long.parseLong(request.pathVariable("id"));
         String name = request.queryParam("name").orElseThrow(
-                () -> new IllegalArgumentException("Name is required")
+                () -> new IllegalArgumentException(ExceptionResponse.NAME_REQUIRED.getMessage())
         );
         return franchiseHandler.updateFranchiseName(id, name)
                 .flatMap(franchise -> ServerResponse.ok().bodyValue(franchise));
