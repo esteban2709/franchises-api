@@ -23,8 +23,7 @@ public class BranchPersistenceAdapter implements IBranchPersistencePort {
     @Override
     public Mono<Branch> findBranchById(Long id) {
         return branchRepository.findById(id)
-                .map(branchEntityMapper::toModel)
-                .switchIfEmpty(Mono.error(new NoDataFoundException()));
+                .map(branchEntityMapper::toModel);
     }
 
     @Override

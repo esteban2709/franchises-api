@@ -1,5 +1,6 @@
 package com.nequi.franchisesapi.infraestructure.out.persistence.repository;
 
+import com.nequi.franchisesapi.domain.model.Product;
 import com.nequi.franchisesapi.domain.utils.ProductStockByBranch;
 import com.nequi.franchisesapi.infraestructure.out.persistence.entity.ProductEntity;
 import org.springframework.data.r2dbc.repository.Query;
@@ -25,7 +26,7 @@ public interface IProductRepository extends ReactiveCrudRepository<ProductEntity
             "WHERE bp2.branch_id = b.id );")
     Flux<ProductStockByBranch> topStockProductsByBranchByFranchiseId(Long id);
 
-    Mono<Boolean> existsByName(String name);
+    Mono<ProductEntity> findProductEntityByName(String name);
 }
 
 

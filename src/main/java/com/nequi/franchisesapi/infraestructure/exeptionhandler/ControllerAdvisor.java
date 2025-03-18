@@ -1,5 +1,6 @@
 package com.nequi.franchisesapi.infraestructure.exeptionhandler;
 
+import com.nequi.franchisesapi.domain.exception.CustomException;
 import com.nequi.franchisesapi.infraestructure.exception.NoDataFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,9 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(MESSAGE, ignoredIllegalArgumentException.getMessage()));
     }
 
-//    @ExceptionHandler(CustomException.class)
-//    public ResponseEntity<Map<String, String>> handleCustomException(CustomException ex) {
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
-//    }
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<Map<String, String>> handleCustomException(CustomException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
+    }
 }

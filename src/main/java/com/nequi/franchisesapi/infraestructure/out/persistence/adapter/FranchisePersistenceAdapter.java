@@ -26,8 +26,7 @@ public class FranchisePersistenceAdapter implements IFranchisePersistencePort {
     @Override
     public Mono<Franchise> findFranchiseById(Long id) {
         return franchiseRepository.findById(id)
-                .map(franchiseEntityMapper::toModel)
-                .switchIfEmpty(Mono.error(new NoDataFoundException()));
+                .map(franchiseEntityMapper::toModel);
     }
 
     @Override
